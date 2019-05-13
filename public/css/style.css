@@ -1,0 +1,19 @@
+@charset "utf-8";
+/** {
+    margin: 0;
+    padding: 0;
+}*/
+/*div.employees_details {
+    display: flex;
+    align-items: center;
+}
+div.office_img,
+li.employees_name {
+    flex-wrap: nowrap;
+}*/
+div.office_img img{
+    height: 63px;
+}
+li {
+    list-style-type: none;
+}
