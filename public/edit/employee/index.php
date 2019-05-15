@@ -1,11 +1,10 @@
 <?php
 
-include('../../../config/base.php');
-include('../../../config/database.php');
-include('../../../config/values.php');
+include('../../../config/all.php');
 
-function listemployeedata() {
-  $dbh = new PDO(DB_CONNECT, DB_USERNAME, DB_PASSWORD);
+$dbh = new PDO(DB_CONNECT, DB_USERNAME, DB_PASSWORD);
+
+function listemployeedata($dbh) {
   $sql = "SELECT
           employees.id AS employees_id
           , employees.name
@@ -30,8 +29,7 @@ function listemployeedata() {
   return $stmt->fetchAll();
 }
 
-function listdepartdata(){
-  $dbh = new PDO(DB_CONNECT, DB_USERNAME, DB_PASSWORD);
+function listdepartdata($dbh){
   $sql = "SELECT
           departs.id AS departs_id
           , departs.depart
@@ -46,15 +44,13 @@ function listdepartdata(){
   return $stmt->fetchAll();
 }
 /*
-function retiredata(){
-  $dbh = new PDO(DB_CONNECT, DB_USERNAME, DB_PASSWORD);
+function retiredata($dbh){
   $sql = "UPDATE `employees` SET `retired_at`= :retired_at,`updated_at`= :retired_at WHERE `id` = :employees_id";
   $stmt = $dbh->prepare($sql);
   $stmt->execute([':retired_at' => $_GET["retired_at"], ':employees_id' => $_GET["employees_id"]]);
 }*/
 
-function updatedata(){
-  $dbh = new PDO(DB_CONNECT, DB_USERNAME, DB_PASSWORD);
+function updatedata($dbh){
   $sql = "UPDATE 
         `employees`
         SET
@@ -84,8 +80,8 @@ function updatedata(){
                   ]);  
 }
 
-$datas = listemployeedata();
-$departs = listdepartdata();
+$datas = listemployeedata($dbh);
+$departs = listdepartdata($dbh);
 
 /*if(isset($_GET["retired_at"]) && $_GET["retired_at"] != ""){
   retiredata();
@@ -93,7 +89,7 @@ $departs = listdepartdata();
 }*/
 
 if($_SERVER['REQUEST_METHOD'] == "POST"){
-  updatedata();
+  updatedata($dbh);
   header("location:/list/");
 }
 

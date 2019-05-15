@@ -1,11 +1,10 @@
 <?php
 
-include('../../../../config/base.php');
-include('../../../../config/database.php');
-include('../../../../config/values.php');
+include('../../../../config/all.php');
 
-function listemployeedata() {
-    $dbh = new PDO(DB_CONNECT, DB_USERNAME, DB_PASSWORD);
+$dbh = new PDO(DB_CONNECT, DB_USERNAME, DB_PASSWORD);
+
+function listemployeedata($dbh) {
     $sql = "SELECT
            `id`
            ,`name`
@@ -17,8 +16,7 @@ function listemployeedata() {
     return $stmt->fetchAll();
 }
 
-function listemployeesdata(){
-    $dbh = new PDO(DB_CONNECT, DB_USERNAME, DB_PASSWORD);
+function listemployeesdata($dbh){
     $sql = "SELECT
             employees.id AS employees_id 
             ,employees.name AS employees_name
@@ -30,8 +28,7 @@ function listemployeesdata(){
     return $stmt->fetchAll();
 }
 
-function listcustomersdata(){
-    $dbh = new PDO(DB_CONNECT, DB_USERNAME, DB_PASSWORD);
+function listcustomersdata($dbh){
     $sql = "SELECT 
             employee_customer.id AS employee_customer_id
             , employee_customer.employee_id
@@ -64,15 +61,14 @@ function listcustomersdata(){
     return $stmt->fetchAll();
 }
 
-$employees = listemployeedata();
-$responsible_datas = listemployeesdata();
-$customers = listcustomersdata();
+$employees = listemployeedata($dbh);
+$responsible_datas = listemployeesdata($dbh);
+$customers = listcustomersdata($dbh);
 
 /**
  * employeesの退職日を更新
  */
-function retiredata(){
-  $dbh = new PDO(DB_CONNECT, DB_USERNAME, DB_PASSWORD);
+function retiredata($dbh){
   $sql = "UPDATE `employees` SET `retired_at`= :retired_at,`updated_at`= :updated_at WHERE `id` = :employees_id";
   $stmt = $dbh->prepare($sql);
   $stmt->execute([':retired_at' => date("Y/m/d")
@@ -84,8 +80,7 @@ function retiredata(){
  * employee_customerのうちの
  * 退職者が担当者のものを論理削除
  */
-function deleteoldresponsible(){
-  $dbh = new PDO(DB_CONNECT, DB_USERNAME, DB_PASSWORD);
+function deleteoldresponsible($dbh){
   $sql = "UPDATE
          `employee_customer`
           SET
@@ -104,9 +99,8 @@ function deleteoldresponsible(){
  * 担当者以外の情報を保持したまま
  * employee_customerに新たな担当者を挿入
  */
-function insertnewresponsible(){
+function insertnewresponsible($dbh){
   for($i=0;$i<$_POST["data_count"];$i++){//ここPOSTなのが怖い
-    $dbh = new PDO(DB_CONNECT, DB_USERNAME, DB_PASSWORD);
     $sql = "INSERT INTO
           `employee_customer`
           (`employee_id`, `customer_id`, `created_at`, `updated_at`, `deleted_at`)
@@ -123,9 +117,9 @@ function insertnewresponsible(){
 
 
 if($_SERVER['REQUEST_METHOD'] == "POST"){
-  retiredata();
-  deleteoldresponsible();
-  insertnewresponsible();
+  retiredata($dbh);
+  deleteoldresponsible($dbh);
+  insertnewresponsible($dbh);
   header("location:/list/");
 }
 

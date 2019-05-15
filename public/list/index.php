@@ -1,11 +1,10 @@
 <?php
 
-include('../../config/base.php');
-include('../../config/database.php');
-include('../../config/values.php');
+include('../../config/all.php');
 
-function listdata() {
-    $dbh = new PDO(DB_CONNECT, DB_USERNAME, DB_PASSWORD);
+$dbh = new PDO(DB_CONNECT, DB_USERNAME, DB_PASSWORD);
+
+function listdata($dbh) {
     /*$sql = "SELECT 
             employee_customer.id AS employee_customer_id
             , employee_customer.employee_id
@@ -73,7 +72,7 @@ function listdata() {
     return $stmt->fetchAll();
 }
 
-$datas = listdata();
+$datas = listdata($dbh);
 $items = [];
 foreach ($datas as $data) {
     $initial = mb_substr($data["employees_name_ruby"], 0, 1);

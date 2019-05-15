@@ -1,11 +1,10 @@
 <?php
 
-include('../../../config/base.php');
-include('../../../config/database.php');
-include('../../../config/values.php');
+include('../../../config/all.php');
 
-function customerdata() {
-  $dbh = new PDO(DB_CONNECT, DB_USERNAME, DB_PASSWORD);
+$dbh = new PDO(DB_CONNECT, DB_USERNAME, DB_PASSWORD);
+
+function customerdata($dbh) {
   $sql = "SELECT 
         employee_customer.id AS employee_customer_id
         , employee_customer.employee_id
@@ -44,6 +43,6 @@ function customerdata() {
   return $stmt->fetchAll();
 }
 
-$datas = customerdata();
+$datas = customerdata($dbh);
 
 include(PAGE_ROOT . 'item/customerdetailView.php');

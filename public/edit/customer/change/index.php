@@ -1,11 +1,10 @@
 <?php
 
-include('../../../../config/base.php');
-include('../../../../config/database.php');
-include('../../../../config/values.php');
+include('../../../../config/all.php');
 
-function listcustomerdata() {
-  $dbh = new PDO(DB_CONNECT, DB_USERNAME, DB_PASSWORD);
+$dbh = new PDO(DB_CONNECT, DB_USERNAME, DB_PASSWORD);
+
+function listcustomerdata($dbh) {
   $sql = "SELECT 
         employee_customer.id AS employee_customer_id
         , employee_customer.employee_id
@@ -45,8 +44,7 @@ function listcustomerdata() {
   return $stmt->fetchAll();
 }
 
-function listemployeedata() {
-  $dbh = new PDO(DB_CONNECT, DB_USERNAME, DB_PASSWORD);
+function listemployeedata($dbh) {
   $sql = "SELECT
          `id`
          ,`name`
@@ -58,8 +56,7 @@ function listemployeedata() {
   return $stmt->fetchAll();
 }
 
-function updatedata(){
-    $dbh = new PDO(DB_CONNECT, DB_USERNAME, DB_PASSWORD);
+function updatedata($dbh){
     $sql = "UPDATE 
         `employee_customer`
         SET
@@ -73,8 +70,7 @@ function updatedata(){
                   ]);  
 }
 
-function insertdata(){
-    $dbh = new PDO(DB_CONNECT, DB_USERNAME, DB_PASSWORD);
+function insertdata($dbh){
     $sql = "INSERT INTO
             `employee_customer`
             (`employee_id`, `customer_id`, `created_at`, `deleted_at`)
@@ -88,12 +84,12 @@ function insertdata(){
                     ]);      
 }
 
-$datas = listcustomerdata();
-$employees = listemployeedata();
+$datas = listcustomerdata($dbh);
+$employees = listemployeedata($dbh);
 
 if($_SERVER['REQUEST_METHOD'] == "POST"){
-  updatedata();
-  insertdata();
+  updatedata($dbh);
+  insertdata($dbh);
   header("location:/list/");
 }
 

@@ -1,11 +1,10 @@
 <?php
 
-include('../../../config/base.php');
-include('../../../config/database.php');
-include('../../../config/values.php');
+include('../../../config/all.php');
 
-function employeedata() {
-  $dbh = new PDO(DB_CONNECT, DB_USERNAME, DB_PASSWORD);
+$dbh = new PDO(DB_CONNECT, DB_USERNAME, DB_PASSWORD);
+
+function employeedata($dbh) {
   $sql = "SELECT
           employees.id AS employees_id
           , employees.name
@@ -27,6 +26,6 @@ function employeedata() {
           return $stmt->fetchAll();
 }
 
-$datas = employeedata();
+$datas = employeedata($dbh);
 
 include(PAGE_ROOT . 'item/employeedetailView.php');
